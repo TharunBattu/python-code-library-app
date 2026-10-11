@@ -5,8 +5,8 @@ services:
     build: database
     volumes:
       - mysql-volume:/var/lib/mysql/
-    #deploy:
-     # replicas: 2
+    deploy:
+      replicas: 2
     healthcheck:
       test: ["CMD","mysqladmin","ping","-h","localhost"]
       start_period: 30s
@@ -17,6 +17,8 @@ services:
   auth_service:
     container_name: auth
     build: auth
+    deploy:
+      replicas: 2
     depends_on:
       db:
         condition: service_healthy
@@ -24,6 +26,8 @@ services:
   book_service:
     container_name: book
     build: book
+    deploy:
+      replicas: 2
     depends_on:
       db:
         condition: service_healthy
@@ -32,6 +36,8 @@ services:
   borrow_service:
     container_name: borrow
     build: borrow
+    deploy:
+      replicas: 2
     depends_on:
       db:
         condition: service_healthy
@@ -42,6 +48,8 @@ services:
     build: .
     ports:
       - "8080:5000"
+      deploy:
+      replicas: 2
     depends_on:
       - auth_service
       - book_service
