@@ -32,7 +32,6 @@ services:
 
 
   borrow_service:
-    container_name: borrow
     build: borrow
     deploy:
       replicas: 2
