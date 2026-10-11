@@ -5,8 +5,6 @@ services:
     build: database
     volumes:
       - mysql-volume:/var/lib/mysql/
-    deploy:
-      replicas: 2
     healthcheck:
       test: ["CMD","mysqladmin","ping","-h","localhost"]
       start_period: 30s
