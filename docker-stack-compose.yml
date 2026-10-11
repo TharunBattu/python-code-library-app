@@ -17,16 +17,14 @@ services:
     deploy:
       replicas: 2
     depends_on:
-      db:
-        condition: service_healthy
+      - db
 
   book_service:
     image: tharunbattu1/library-app:book_service
     deploy:
       replicas: 2
     depends_on:
-      db:
-        condition: service_healthy
+      - db
 
 
   borrow_service:
@@ -34,8 +32,7 @@ services:
     deploy:
       replicas: 2
     depends_on:
-      db:
-        condition: service_healthy
+      - db
 
 
   app:
