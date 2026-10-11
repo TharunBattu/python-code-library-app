@@ -1,60 +1,54 @@
 ---
 services:
   db:
-    image: shaikmustafa/arshad:db
-    deploy:
-      replicas: 1
-    ports:
-      - "3306:3306"
-    networks:
-      - mynetwork
+    container_name: db
+    build: database
+    volumes:
+      - mysql-volume:/var/lib/mysql/
+    #deploy:
+     # replicas: 2
+    healthcheck:
+      test: ["CMD","mysqladmin","ping","-h","localhost"]
+      start_period: 30s
+      interval: 15s
+      timeout: 20s
+      retries: 3
 
   auth_service:
-    image: shaikmustafa/arshad:auth
-    deploy:
-      replicas: 1
-    ports:
-      - "5001:5001"
-    networks:
-      - mynetwork
+    container_name: auth
+    build: auth
     depends_on:
-      - db
-    
+      db:
+        condition: service_healthy
 
   book_service:
-    image: shaikmustafa/arshad:book
-    deploy:
-      replicas: 1
-    ports:
-      - "5002:5002"
-    networks:
-      - mynetwork
+    container_name: book
+    build: book
     depends_on:
-      - db
-  borrow_service:
-    image: shaikmustafa/arshad:borrow
-    deploy:
-      replicas: 1
-    ports:
-      - "5003:5003"
-    networks:
-      - mynetwork
-    depends_on:
-      - db
+      db:
+        condition: service_healthy
 
-  frontend:
-    image: shaikmustafa/arshad:frontend
-    deploy:
-      replicas: 1
+
+  borrow_service:
+    container_name: borrow
+    build: borrow
+    depends_on:
+      db:
+        condition: service_healthy
+
+
+  app:
+    container_name: app
+    build: .
     ports:
-      - "5000:5000"
-    networks:
-      - mynetwork
+      - "8080:5000"
     depends_on:
       - auth_service
       - book_service
       - borrow_service
 
-networks:
-  mynetwork:
-    driver: bridge
+
+volumes:
+  mysql-volume:
+      
+...
