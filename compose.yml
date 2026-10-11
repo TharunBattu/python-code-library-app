@@ -21,7 +21,6 @@ services:
         condition: service_healthy
 
   book_service:
-    container_name: book
     build: book
     deploy:
       replicas: 2
