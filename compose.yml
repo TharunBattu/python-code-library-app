@@ -13,7 +13,6 @@ services:
       retries: 3
 
   auth_service:
-    container_name: auth
     build: auth
     deploy:
       replicas: 2
